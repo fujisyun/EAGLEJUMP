@@ -1,6 +1,6 @@
 #include "variables.h"
 
-//モーターをPID制御で動かす関数…引数（左の目標値、右の目標値、左の向き、右の向き
+//モーターをPID制御で動かす関数…引数（左の目標値、右の目標値、左の向き、右の向き)
 void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
   dvelL[prepre]=dvelL[pre];
   dvelR[prepre]=dvelR[pre];
@@ -89,7 +89,7 @@ void driveDistance(int L,int R,boolean directionL,boolean directionR){
     else{
       if (countL-countL_old<L) 
         drive(drivepower,0,directionR,directionL);
-      else{//指定距離進んだら
+      else{//指定距離進んだら止まる
         drive(0,0,directionR,directionL);
         ans=0;
       }
