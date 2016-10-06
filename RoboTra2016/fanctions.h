@@ -56,7 +56,7 @@ void quadturn(boolean muki){
   int drivepower=50;//強さ
   int value=250;//どれくらい曲がるか
   switch(muki){
-  case left:
+  case left://左に回りたいとき
     countL_old=countL;
     while(abs(countL-countL_old)<value){
       Serial.println(countL-countL_old);
@@ -71,7 +71,7 @@ void quadturn(boolean muki){
     delay(1000);
     break;
 
-  case right:
+  case right://右に回りたいとき
     countR_old=countR;
     while(abs(countR-countR_old)<value){
       Serial.println(countR-countR_old);
@@ -97,12 +97,13 @@ void forest(){//迷いの森(値など要修正）
   Bd = getDistance(trigPinB,echoPinB);//左
 
   //三項演算子で書いてしまいました。可読性が下がる…
+  //距離が3以下になったら障害物検知
   A=(Ad>3)?1:0;//A>3なら1、そうでないなら0を返す
   B=(Bd>3)?1:0;
   mode=A+B*2;
 
 
-  Serial.println(mode);
+//  Serial.println(mode);
 
   switch(mode){//両方検知しない
   case 0://両方検知しない
@@ -137,6 +138,7 @@ void forest(){//迷いの森(値など要修正）
 
 void line_sensor(){//ラインセンサの値を入れる
   //一部ポート操作で書いてます。digitalReadと同じ処理だが、処理速度が1/10くらいになる。
+  //各ポートによって立つビットが違うので、＆で調整してます。
   LSD1=!(PINC & _BV(1)&&2);//digitalRead(A1);と同じ
   LSA2=analogRead(LineSensorAna2);
   LSD3=!(PINC & _BV(3)&&8);//digitalRead(A3);と同じ
@@ -146,7 +148,10 @@ void line_sensor(){//ラインセンサの値を入れる
   Serial.println(LSmode);
 }
 
-void line_trace(int mode){//ライントレースのプログラム 
+//ライントレースのプログラム (ライントレースする向き)
+//（FRONT)で通常のライントレース。
+//（BACK)の時はT字までライントレース。->T字を見つけたら止まる。
+void line_trace(int mode){
   line_sensor();
   if(mode==FRONT){
     switch(LSmode){
@@ -170,7 +175,8 @@ void line_trace(int mode){//ライントレースのプログラム
           break;
         }
       }
-      if(T)break;
+//T字を見つけたらループを抜ける
+        if(T)break;
 
       T=false;
       countR_old=countR;
@@ -201,6 +207,7 @@ void line_trace(int mode){//ライントレースのプログラム
     case 20://真ん中と右
       countL_old=countL;
       countR_old=countR;
+        //ある程度前進
       while((countL-countL_old)>300&&(countR-countR_old)>300){
         drive(30,30,FRONT,FRONT);
         if(PINC & _BV(1)&&2){
@@ -215,6 +222,7 @@ void line_trace(int mode){//ライントレースのプログラム
       drive(0,0,BACK,BACK);
 
       countL_old=countL;
+        //現在の値からロータリーエンコーダが200カウントするまで
       while(abs(countL-countL_old)<200){
         LSD1=PINC & _BV(1)&&2;
         Serial.print(countL-countL_old);
@@ -235,6 +243,7 @@ void line_trace(int mode){//ライントレースのプログラム
       break;
 
     default:
+        //ラインセンサーから読み取った値を使ってPID制御する。
       drive((LSA4>>5)+5,(LSA2>>5)+5,FRONT,FRONT);
       break;
     }
@@ -267,23 +276,10 @@ void line_trace(int mode){//ライントレースのプログラム
       break;
 
     default:
+        //ラインセンサーから読み取った値を使ってPID制御する。
       drive((LSA2>>5)+5,(LSA4>>5)+5,BACK,BACK);
       break;
     }
-
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
