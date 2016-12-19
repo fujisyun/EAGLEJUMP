@@ -66,7 +66,7 @@ void servo(boolean state){//サーボ用マイコンに信号を送るための�
 //一定距離進む関数(左目標値、右目標値、左進行方向、右進行方向）割としっかり進む。
 //本番は500mmで2500くらい<-要調整
 void driveDistance(int L,int R,boolean directionL,boolean directionR){
-  int drivepower=100;
+  int drivepower=150;
   int countR_old=countR;
   int countL_old=countL;
   boolean Rval=0,Lval=0,ans=1;
@@ -76,25 +76,30 @@ void driveDistance(int L,int R,boolean directionL,boolean directionR){
     Serial.print("\t");
     Serial.println(countR);
     */
-
-    if(countR-countR_old<R){
-      if (countL-countL_old<L) 
-      {
+    if(countR-countR_old<R&&countL-countL_old<L){
         drive(drivepower,drivepower,directionR,directionL);
+Serial.println("aaaa\n");
       }
-      else{
+    else if(countR-countR_old<R&&countL-countL_old>=L){
         drive(0,drivepower,directionR,directionL);
+Serial.println("bbbb\n");
       }
-    }
-    else{
-      if (countL-countL_old<L) 
+    else if(countR-countR_old>=R&&countL-countL_old<L){
         drive(drivepower,0,directionR,directionL);
-      else{//指定距離進んだら止まる
+Serial.println("cccc\n");
+      }
+    else if(countR-countR_old>=R&&countL-countL_old>=L){//指定距離進んだら止まる
         drive(0,0,directionR,directionL);
+Serial.println("dddd\n");
         ans=0;
       }
-    }
+    
+/*      Serial.print(countL);
+  Serial.print("\t");
+  Serial.println(countR);
+*/
   }
+
 }
 
 

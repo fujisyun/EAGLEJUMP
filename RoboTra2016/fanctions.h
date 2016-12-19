@@ -145,7 +145,7 @@ void line_sensor(){//ラインセンサの値を入れる
   LSA4=analogRead(LineSensorAna4);
   LSD5=!(PINC & _BV(5)&&32);//digitalRead(A3);と同じ
   LSmode=LSD1+LSD3*4+LSD5*16;
-  Serial.println(LSmode);
+//  Serial.println(LSmode);
 }
 
 //ライントレースのプログラム (ライントレースする向き)
