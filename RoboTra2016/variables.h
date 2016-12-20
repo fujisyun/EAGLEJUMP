@@ -3,7 +3,7 @@
 エンコーダ関係の変数は正の数のみ使うため、unsigned指定子(?）を付けている。
 
 *************************************************************************************/
-
+#ifndef now
 #define now 2
 #define pre 1
 #define prepre 0
@@ -28,12 +28,12 @@ int MVR=0;//Rモーター出力
 int dMVL=0;//Lモーター偏差
 int dMVR=0;//Rモーター偏差
 
-float  KpL = 0.01;//P制御の係数L
-float  KpR = 0.01;//P制御の係数R
-float  KiL = 0.0075;//I制御の係数L
-float  KiR = 0.0075;//I制御の係数R
-float  KdL = 0.0025;//D制御の係数L
-float  KdR = 0.0025;//D制御の係数R
+float  KpL = 1;//P制御の係数L
+float  KpR = 1;//P制御の係数R
+float  KiL = 0.75;//I制御の係数L
+float  KiR = 0.75;//I制御の係数R
+float  KdL = 0.25;//D制御の係数L
+float  KdR = 0.25;//D制御の係数R
 
 //PID制御の途中の式で使っている変数。float型にした方がよいかも
 int  pValueL=0;
@@ -55,10 +55,10 @@ const int LineSensorAna4=4;
 const int LineSensorDig5=(5+14);
 
 //それぞれモーター用のピン
-const int LmoterA=6;
-const int LmoterB=5;
-const int RmoterA=9;
-const int RmoterB=10;
+const int RmoterA=5;
+const int RmoterB=6;
+const int LmoterA=9;
+const int LmoterB=10;
 
 const int servopin=11;//サーボを動かすArduino UNOに信号を送るためのピン番号
 
@@ -80,3 +80,4 @@ int dvelL[3]={
   0,0,0};
 int dvelR[3]={
   0,0,0};
+#endif

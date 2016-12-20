@@ -155,9 +155,10 @@ void line_trace(){
   line_sensor();
   int drivepower=100;
     switch(LSmode){
-
     case 1://左のみ
       drive(0,drivepower,FRONT,FRONT);
+      Serial.print("case 1");
+      Serial.print("\t");
       break;
 
 /*    case 5://中心と左
@@ -198,11 +199,15 @@ void line_trace(){
 
 
     case 4://中心のみ
-      drive((LSA4>>3)+5,(LSA2>>3)+5,FRONT,FRONT);
+      drive((LSA4>>3),(LSA2>>3),FRONT,FRONT);
+      Serial.print("case 4");
+      Serial.print("\t");
       break;
 
     case 16://右のみ
       drive(drivepower,0,FRONT,FRONT);
+      Serial.print("case 16");
+      Serial.print("\t");
       break;
 
 
@@ -244,12 +249,16 @@ void line_trace(){
 
     case 21:
       drive(0,0,FRONT,FRONT);
+      Serial.print("case 21");
+      Serial.print("\t");
       break;
 
 
     default:
         //ラインセンサーから読み取った値を使ってPID制御する。
-      drive((LSA4>>3)+5,(LSA2>>3)+5,FRONT,FRONT);
+      drive((LSA4>>3),(LSA2>>3),FRONT,FRONT);
+      Serial.print("default");
+      Serial.print("\t");
       break;
   }
 }

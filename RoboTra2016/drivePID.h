@@ -2,6 +2,7 @@
 
 //モーターをPID制御で動かす関数…引数（左の目標値、右の目標値、左の向き、右の向き)
 void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
+
   dvelL[prepre]=dvelL[pre];
   dvelR[prepre]=dvelR[pre];
   dvelL[pre]=dvelL[now];
@@ -18,13 +19,17 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
 
   dMVL=pValueL+iValueL+dValueL;
   dMVR=pValueR+iValueR+dValueR;
+  MVR=0;
+  MVL=0;
   MVR=MVR+dMVR;
   MVL=MVL+dMVL;
 
+  Serial.print("driving");
+  Serial.print("\t");
   Serial.print(MVL);
   Serial.print("\t");
   Serial.print(MVR);
-  Serial.println("\t");
+  Serial.print("\t");
 
   MVL = constrain(MVL,0,255);//関数内は値の調整(ArduinoではPWMは0~255だから)
   MVR = constrain(MVR,0,255);//関数内は値の調整
@@ -105,12 +110,6 @@ void driveDistance(int L,int R,boolean directionL,boolean directionR){
   boolean Rval=0,Lval=0,ans=1;
   while(ans){
 
-    Serial.print(countL-countL_old);
-    Serial.print("\t");
-    Serial.print(countR-countR_old);
-    Serial.print("\t");
-    
-
     if(countR-countR_old<R&&countL-countL_old<L){
         drive(drivepower,drivepower,directionR,directionL);
       }
@@ -125,9 +124,6 @@ void driveDistance(int L,int R,boolean directionL,boolean directionR){
         ans=0;
       }
     
-      Serial.print(countL);
-  Serial.print("\t");
-  Serial.println(countR);
 
   }
 
