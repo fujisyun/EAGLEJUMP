@@ -41,6 +41,8 @@ void loop(){
   
     line_sensor();
 
+//    drive(100,100,FRONT,FRONT);
+
     driveDistance(2000,2000,FRONT,FRONT);
     delay(1000);
     driveDistance(2000,2000,BACK,BACK);
