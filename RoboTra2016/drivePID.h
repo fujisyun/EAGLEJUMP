@@ -21,6 +21,11 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
   MVR=MVR+dMVR;
   MVL=MVL+dMVL;
 
+  Serial.print(MVL);
+  Serial.print("\t");
+  Serial.print(MVR);
+  Serial.println("\t");
+
   MVL = constrain(MVL,0,255);//関数内は値の調整(ArduinoではPWMは0~255だから)
   MVR = constrain(MVR,0,255);//関数内は値の調整
 
@@ -83,11 +88,6 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
   }
 
 
-
-  Serial.print(MVL);
-  Serial.print("\t");
-  Serial.print(MVR);
-  Serial.print("\t");
 }
 
 void servo(boolean state){//サーボ用マイコンに信号を送るための関数
@@ -113,26 +113,22 @@ void driveDistance(int L,int R,boolean directionL,boolean directionR){
 
     if(countR-countR_old<R&&countL-countL_old<L){
         drive(drivepower,drivepower,directionR,directionL);
-Serial.println("aaaa\n");
       }
     else if(countR-countR_old>=R&&countL-countL_old<L){
         drive(drivepower,0,directionR,directionL);
-Serial.println("cccc\n");
       }
     else if(countR-countR_old<R&&countL-countL_old>=L){
         drive(0,drivepower,directionR,directionL);
-Serial.println("bbbb\n");
       }
     else if(countR-countR_old>=R&&countL-countL_old>=L){//指定距離進んだら止まる
         drive(0,0,directionR,directionL);
-Serial.println("dddd\n");
         ans=0;
       }
     
-/*      Serial.print(countL);
+      Serial.print(countL);
   Serial.print("\t");
   Serial.println(countR);
-*/
+
   }
 
 }

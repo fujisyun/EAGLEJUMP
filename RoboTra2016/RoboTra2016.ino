@@ -38,18 +38,18 @@ void setup(){
 
 
 void loop(){
-  
-    line_sensor();
+ //   line_trace();
 
-//    drive(100,100,FRONT,FRONT);
-
+ 	speedmeter();
+    drive(200,200,FRONT,FRONT);
+/*
     driveDistance(2000,2000,FRONT,FRONT);
     delay(1000);
     driveDistance(2000,2000,BACK,BACK);
     delay(1000);
 
-
-/*  Serial.print(LSD1);
+/*
+  Serial.print(LSD1);
   Serial.print("\t");
   Serial.print(LSA2);
   Serial.print("\t");
@@ -59,9 +59,9 @@ void loop(){
   Serial.print("\t");
   Serial.print(LSD5);
   Serial.print("\t");
-  Serial.print("\t");*/
+  Serial.print("\t");
 
-
+*/
 
 //  sendSerial();
 

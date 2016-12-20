@@ -145,22 +145,22 @@ void line_sensor(){//ラインセンサの値を入れる
   LSA4=analogRead(LineSensorAna4);
   LSD5=!(PINC & _BV(5)&&32);//digitalRead(A3);と同じ
   LSmode=LSD1+LSD3*4+LSD5*16;
-//  Serial.println(LSmode);
+  Serial.println(LSmode);
 }
 
 //ライントレースのプログラム (ライントレースする向き)
 //（FRONT)で通常のライントレース。
 //（BACK)の時はT字までライントレース。->T字を見つけたら止まる。
-void line_trace(int mode){
+void line_trace(){
   line_sensor();
-  if(mode==FRONT){
+  int drivepower=100;
     switch(LSmode){
 
     case 1://左のみ
-      drive(0,30,FRONT,FRONT);
+      drive(0,drivepower,FRONT,FRONT);
       break;
 
-    case 5://中心と左
+/*    case 5://中心と左
       drive(0,0,BACK,BACK);
       //    delay(1000);
       countL_old=countL;
@@ -182,7 +182,7 @@ void line_trace(int mode){
       countR_old=countR;
       while(abs(countR-countR_old)<200){
         LSD1=PINC & _BV(1)&&2;
-        Serial.print(countR-countR_old);
+        Serial.print(countR);
         Serial.println("aaaaaaaaaaaaaa");
         drive(0,30,FRONT,FRONT);
       }
@@ -194,17 +194,20 @@ void line_trace(int mode){
         drive(0,30,FRONT,FRONT);
       }
       break;
+      */
 
 
     case 4://中心のみ
-      drive(40,40,FRONT,FRONT);
+      drive((LSA4>>3)+5,(LSA2>>3)+5,FRONT,FRONT);
       break;
 
     case 16://右のみ
-      drive(30,0,FRONT,FRONT);
+      drive(drivepower,0,FRONT,FRONT);
       break;
 
-    case 20://真ん中と右
+
+
+/*    case 20://真ん中と右
       countL_old=countL;
       countR_old=countR;
         //ある程度前進
@@ -225,7 +228,7 @@ void line_trace(int mode){
         //現在の値からロータリーエンコーダが200カウントするまで
       while(abs(countL-countL_old)<200){
         LSD1=PINC & _BV(1)&&2;
-        Serial.print(countL-countL_old);
+        Serial.print(countL);
         Serial.println("aaaaaaaaaaaaaa");
         drive(30,0,FRONT,FRONT);
       }
@@ -237,49 +240,20 @@ void line_trace(int mode){
         drive(30,0,FRONT,FRONT);
       }
       break;
+      */
 
     case 21:
       drive(0,0,FRONT,FRONT);
       break;
 
-    default:
-        //ラインセンサーから読み取った値を使ってPID制御する。
-      drive((LSA4>>5)+5,(LSA2>>5)+5,FRONT,FRONT);
-      break;
-    }
-  }
-  else {//mode==BACK  後ろ向きライントレース  T字を検知するまでに単純化した方がいいかも
-    switch(LSmode){
-
-    case 1://左のみ
-      drive(30,0,BACK,BACK);
-      break;
-
-    case 5://中心と左
-      drive(30,0,BACK,BACK);
-      break;
-
-
-    case 4://中心のみ
-      drive(40,40,BACK,BACK);
-      break;
-
-    case 16://右のみ
-      drive(0,30,BACK,BACK);
-      break;
-
-    case 20://真ん中と右
-      drive(0,30,BACK,BACK);
-    case 21://3つ反応したら
-      drive(0,0,BACK,BACK);
-      T=true;
-      break;
 
     default:
         //ラインセンサーから読み取った値を使ってPID制御する。
-      drive((LSA2>>5)+5,(LSA4>>5)+5,BACK,BACK);
+      drive((LSA4>>3)+5,(LSA2>>3)+5,FRONT,FRONT);
       break;
-    }
   }
 }
+
+
+
 
