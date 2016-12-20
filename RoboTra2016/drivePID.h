@@ -24,10 +24,36 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
   MVL = constrain(MVL,0,255);//関数内は値の調整(ArduinoではPWMは0~255だから)
   MVR = constrain(MVR,0,255);//関数内は値の調整
 
-  if(vel_goalL==0){//目標値が0の時はタイヤを止める
+  if(vel_goalL==0&&vel_goalR==0){//目標値が0の時はタイヤを止める
     analogWrite(LmoterA,255);
     analogWrite(LmoterB,255);
+    analogWrite(RmoterA,255);
+    analogWrite(RmoterB,255);
 //    delay(1);
+  }
+  else if(vel_goalL==0&&vel_goalR!=0){//only R motor
+    analogWrite(LmoterA,255);
+    analogWrite(LmoterB,255);
+    if(directionR==FRONT){
+      analogWrite(RmoterA,MVR);  
+      analogWrite(RmoterB,0);
+      }
+      else if(directionR==BACK){
+      analogWrite(RmoterA,0);
+      analogWrite(RmoterB,MVR);       
+      }
+  }
+  else if(vel_goalL!=0&&vel_goalR==0){
+    analogWrite(RmoterA,255);
+    analogWrite(RmoterB,255);
+    if(directionL==FRONT){//両方PWMピンにする
+      analogWrite(LmoterA,MVL);
+      analogWrite(LmoterB,0);
+    }  
+    else if(directionL==BACK){
+      analogWrite(LmoterA,0);
+      analogWrite(LmoterB,MVL);
+      }    
   }
   else{
     if(directionL==FRONT&&directionR==FRONT){//両方PWMピンにする
@@ -56,37 +82,8 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
       }
   }
 
-  if(vel_goalR==0){
-    analogWrite(RmoterA,255);
-    analogWrite(RmoterB,255);
-//    delay(1);
-  }
-  else{
-   if(directionL==FRONT&&directionR==FRONT){//両方PWMピンにする
-      analogWrite(LmoterA,MVL);
-      analogWrite(LmoterB,0);
-      analogWrite(RmoterA,MVR);  
-      analogWrite(RmoterB,0);
-    }  
-    else if(directionL==BACK&&directionR==FRONT){
-      analogWrite(LmoterA,0);
-      analogWrite(LmoterB,MVL);
-      analogWrite(RmoterA,MVR);  
-      analogWrite(RmoterB,0);
-      }
-      else if(directionL==FRONT&&directionR==BACK){
-      analogWrite(LmoterA,MVL);
-      analogWrite(LmoterB,0);
-      analogWrite(RmoterA,0);
-      analogWrite(RmoterB,MVR);       
-      }
-      else if(directionL=BACK&&directionR==BACK){
-      analogWrite(LmoterA,0);
-      analogWrite(LmoterB,MVL);      
-      analogWrite(RmoterA,0);
-      analogWrite(RmoterB,MVR);  
-      }
-  }
+
+
   Serial.print(MVL);
   Serial.print("\t");
   Serial.print(MVR);
@@ -103,16 +100,16 @@ void servo(boolean state){//サーボ用マイコンに信号を送るための�
 //本番は500mmで2500くらい<-要調整
 void driveDistance(int L,int R,boolean directionL,boolean directionR){
   int drivepower=150;
-  int countR_old=countR;
-  int countL_old=countL;
+  volatile unsigned long countR_old=countR;
+  volatile unsigned long countL_old=countL;
   boolean Rval=0,Lval=0,ans=1;
   while(ans){
-/*
+
     Serial.print(countL-countL_old);
     Serial.print("\t");
     Serial.print(countR-countR_old);
     Serial.print("\t");
-  */  
+    
 
     if(countR-countR_old<R&&countL-countL_old<L){
         drive(drivepower,drivepower,directionR,directionL);
