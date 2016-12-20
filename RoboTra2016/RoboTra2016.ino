@@ -40,7 +40,34 @@ void setup(){
 void loop(){
   
     line_sensor();
-  switch(situation){//何回目のT時か
+
+//    drive(100,100,FRONT,FRONT);
+
+    driveDistance(2000,2000,FRONT,FRONT);
+    delay(1000);
+    driveDistance(2000,2000,BACK,BACK);
+    delay(1000);
+
+
+/*  Serial.print(LSD1);
+  Serial.print("\t");
+  Serial.print(LSA2);
+  Serial.print("\t");
+  Serial.print(LSD3);
+  Serial.print("\t");
+  Serial.print(LSA4);
+  Serial.print("\t");
+  Serial.print(LSD5);
+  Serial.print("\t");
+  Serial.print("\t");*/
+
+
+
+//  sendSerial();
+
+
+    /*
+  switch(situation){//何回目のT字か
   //1,3,5,7,9でそれぞれ1,2,3,4,5回目
   //読みずらいので要修正かと
   case 1://1回目
@@ -117,9 +144,9 @@ void loop(){
     line_trace(FRONT);
     break;
   }
+  */
 
 /*    
-  sendSerial();
   driveDistance(200,200,FRONT,FRONT);
   drive(0,0,FRONT,FRONT);
   delay(2000);
@@ -128,6 +155,7 @@ void loop(){
 
 
 
-
+void   sendSerial(){
+}
 
 
