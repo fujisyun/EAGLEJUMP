@@ -43,10 +43,10 @@ int  iValueR=0;
 int  dValueL=0;
 int  dValueR=0;
 
-const int trigPinA=7;
-const int echoPinA=8;
-const int trigPinB=12;   //トリガを12ピンに設定
-const int echoPinB=13;   //エコーを13ピンに設定
+const int trigPinL=7;
+const int echoPinL=8;
+const int trigPinR=12;   //トリガを12ピンに設定
+const int echoPinR=13;   //エコーを13ピンに設定
 
 const int LineSensorDig1=(1+14);//ラインセンサ。A1ピンを使うためこのように書いた
 const int LineSensorAna2=2;
@@ -63,15 +63,16 @@ const int LmoterB=10;
 const int servopin=11;//サーボを動かすArduino UNOに信号を送るためのピン番号
 
 //ラインセンサの状態を入れる変数。
-boolean LSD1=0;
+bool LSD1=0;
 int LSA2=0;
-boolean LSD3=0;
+bool LSD3=0;
 int LSA4=0;
-boolean LSD5=0;
+bool LSD5=0;
 int LSmode=0;
 
 int situation=0;//状況を示す関数。
-boolean T=0;//T字判定
+bool T=0;//T字判定
+
 
 //boolean state=0;
 

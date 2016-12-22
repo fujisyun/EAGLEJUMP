@@ -1,7 +1,7 @@
 #include "variables.h"
 
 //モーターをPID制御で動かす関数…引数（左の目標値、右の目標値、左の向き、右の向き)
-void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
+void drive(int vel_goalL,int vel_goalR,bool directionL,bool directionR){
 
   dvelL[prepre]=dvelL[pre];
   dvelR[prepre]=dvelR[pre];
