@@ -3,7 +3,7 @@
 #include <MsTimer2.h>
 #include <TimerOne.h>
 #include "fanctions.h"
-#include "switch.h"
+//#include "switch.h"
 
 
 
@@ -35,15 +35,14 @@ void setup(){
   attachInterrupt(0,flashR,RISING);//pin2
   attachInterrupt(1,flashL,RISING);//pin3
   Serial.begin(9600);
-
 }
 
-
-
 void loop(){
-    line_trace();
-//    avoid();//障害物避け
+//    line_trace();
 
+while(1){
+      avoid();//障害物避け
+}
 //    drive(200,200,FRONT,FRONT);
 /*
     driveDistance(2000,2000,FRONT,FRONT);
