@@ -183,7 +183,7 @@ void line_trace(){
 
 
     case 4://中心のみ
-      drive((LSA4>>2)+drivepower-50,(LSA2>>2)+drivepower-50,FRONT,FRONT);
+      drive((LSA4>>2)+drivepower,(LSA2>>2)+drivepower,FRONT,FRONT);
       Serial.print("case 4");
       Serial.print("\t");
       break;
@@ -200,7 +200,7 @@ void line_trace(){
       countL_old=countL;
       countR_old=countR;
         //ある程度前進
-      while((countL-countL_old)<100&&(countR-countR_old)<100){
+      while((countL-countL_old)<100&&(countdR-countR_old)<100){
           LSD1=!(PINC & _BV(1)&&2);
           drive(100,100,FRONT,FRONT);
         if(LSD1){
@@ -239,7 +239,7 @@ void line_trace(){
 
     default:
         //ラインセンサーから読み取った値を使ってPID制御する。
-      drive((LSA4>>3)+drivepower-50,(LSA2>>3)+drivepower-50,FRONT,FRONT);
+      drive((LSA4>>3)+drivepower,(LSA2>>3)+drivepower,FRONT,FRONT);
       Serial.print("default");
       Serial.print("\t");
       break;

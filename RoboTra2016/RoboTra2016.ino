@@ -38,22 +38,8 @@ void setup(){
 }
 
 void loop(){
-//    line_trace();
-
-while(1){
-      avoid();//障害物避け
-      line_sensor();
-      if(LSmode!=0)break;
-}
-//    drive(200,200,FRONT,FRONT);
 /*
-    driveDistance(2000,2000,FRONT,FRONT);
-    delay(1000);
-    driveDistance(2000,2000,BACK,BACK);
-    delay(1000);
-*/
-/*
-line_sensor();	
+  line_sensor();	
   Serial.print(LSD1);
   Serial.print("\t");
   Serial.print(LSA2);
@@ -67,44 +53,28 @@ line_sensor();
   Serial.println("\t");
 */
 
-
-//  sendSerial();
-
-
     
   switch(situation){//何回目のT字か
   //1,3,5,7,9でそれぞれ1,2,3,4,5回目
   //読みずらいので要修正かと
   case 1://1回目
- /*
-    driveDistance(1000,1000,BACK,FRONT);
-    while(LSD3){
-      LSD3=PINC & _BV(3)&&8;
-      drive(50,50,BACK,FRONT);
-    }
-    while(T==0){//T字を検知するまで
-    line_trace(BACK);
-    }
-    situation++;
-*/
-	drive(0,0,FRONT,FRONT);
+	Serial.print("TTTTTTTT");
+	driveDistance(1000,1000,FRONT,FRONT);
 	while(1){
-	Serial.print("\t");
-	Serial.print("\t");
-	Serial.print("\t");
-	Serial.print("\t");
-	Serial.println(situation);
-}
-	Serial.print("\t");
+      avoid();//障害物避け
+      line_sensor();
+      if(LSmode!=0)break;
+	}
+	situation++;
     break;
-
+/*
   case 3://2回目
       driveDistance(1000,1000,BACK,BACK);
       delay(5000);
       driveDistance(1200,1200,FRONT,FRONT);
       situation++;
     break;
-
+/*
   case 5://3
     drive(0,0,BACK,BACK);
 
@@ -155,7 +125,7 @@ line_sensor();
     
     situation++;  
   break;
-  
+  */
   default:
     line_trace();
     break;
@@ -169,9 +139,5 @@ line_sensor();
   */
 }
 
-
-
-void   sendSerial(){
-}
 
 
