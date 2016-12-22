@@ -7,10 +7,12 @@
 
 
 void setup(){
+//超音波センサー用
   pinMode(trigPinA,OUTPUT);
   pinMode(echoPinA,INPUT);
   pinMode(trigPinB,OUTPUT);
   pinMode(echoPinB,INPUT);
+
   pinMode(LineSensorDig1,INPUT);
   pinMode(LineSensorDig3,INPUT);
   pinMode(LineSensorDig5,INPUT);
@@ -39,6 +41,7 @@ void setup(){
 
 void loop(){
     line_trace();
+    avoid();//障害物避け
 
 //    drive(200,200,FRONT,FRONT);
 /*
