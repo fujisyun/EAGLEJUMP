@@ -28,12 +28,12 @@ int MVR=0;//Rモーター出力
 int dMVL=0;//Lモーター偏差
 int dMVR=0;//Rモーター偏差
 
-float  KpL = 1;//P制御の係数L
-float  KpR = 1;//P制御の係数R
+float  KpL = 1.5;//P制御の係数L
+float  KpR = 1.5;//P制御の係数R
 float  KiL = 0.75;//I制御の係数L
 float  KiR = 0.75;//I制御の係数R
-float  KdL = 0.25;//D制御の係数L
-float  KdR = 0.25;//D制御の係数R
+float  KdL = 0.5;//D制御の係数L
+float  KdR = 0.5;//D制御の係数R
 
 //PID制御の途中の式で使っている変数。float型にした方がよいかも
 int  pValueL=0;

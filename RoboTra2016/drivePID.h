@@ -24,13 +24,14 @@ void drive(int vel_goalL,int vel_goalR,bool directionL,bool directionR){
   MVR=MVR+dMVR;
   MVL=MVL+dMVL;
 
+/*
   Serial.print("driving");
   Serial.print("\t");
   Serial.print(MVL);
   Serial.print("\t");
   Serial.print(MVR);
   Serial.print("\t");
-
+*/
   MVL = constrain(MVL,0,255);//関数内は値の調整(ArduinoではPWMは0~255だから)
   MVR = constrain(MVR,0,255);//関数内は値の調整
 

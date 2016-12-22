@@ -17,15 +17,16 @@ void avoid(){//Lが左、Rが右の超音波センサー。
   Serial.println(Rd);
 
   //障害物なし。前進。
+  
   if(Rd==0&&Ld==0){
    if(Lcount==0&&Rcount==0){
-      drive(2000,2000,FRONT,FRONT);
+      driveDistance(2000,2000,FRONT,FRONT);
     }
     if(Lcount!=0){
-      drive(2000,2000,FRONT,FRONT);
+      driveDistance(2000,2000,FRONT,FRONT);
     }
     if(Rcount!=0){
-      drive(2000,2000,FRONT,FRONT);
+      driveDistance(2000,2000,FRONT,FRONT);
     }
   }
 

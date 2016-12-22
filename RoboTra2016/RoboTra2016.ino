@@ -32,8 +32,8 @@ void setup(){
   //  Timer1.attachInterrupt(flash);
  //以下二つはピン変化割り込み。
  //ピンの状態がHIGH->LOWあるいはLOW->HIGHになったときに指定された関数を実行する。  
-  attachInterrupt(0,flashL,RISING);//pin2
-  attachInterrupt(1,flashR,RISING);//pin3
+  attachInterrupt(0,flashR,RISING);//pin2
+  attachInterrupt(1,flashL,RISING);//pin3
   Serial.begin(9600);
 
 }
@@ -41,8 +41,8 @@ void setup(){
 
 
 void loop(){
-//    line_trace();
-    avoid();//障害物避け
+    line_trace();
+//    avoid();//障害物避け
 
 //    drive(200,200,FRONT,FRONT);
 /*
@@ -64,17 +64,18 @@ line_sensor();
   Serial.print(LSD5);
   Serial.print("\t");
   Serial.println("\t");
-
+*/
 
 
 //  sendSerial();
 
 
-    /*
+    
   switch(situation){//何回目のT字か
   //1,3,5,7,9でそれぞれ1,2,3,4,5回目
   //読みずらいので要修正かと
   case 1://1回目
+ /*
     driveDistance(1000,1000,BACK,FRONT);
     while(LSD3){
       LSD3=PINC & _BV(3)&&8;
@@ -84,6 +85,16 @@ line_sensor();
     line_trace(BACK);
     }
     situation++;
+*/
+	drive(0,0,FRONT,FRONT);
+	while(1){
+	Serial.print("\t");
+	Serial.print("\t");
+	Serial.print("\t");
+	Serial.print("\t");
+	Serial.println(situation);
+}
+	Serial.print("\t");
     break;
 
   case 3://2回目
@@ -113,13 +124,13 @@ line_sensor();
 
   case 7://4回目
     driveDistance(100,100,FRONT,FRONT);
-    forest();//障害物除け
+    avoid();//障害物除け
     situation++;
     break;
 
   case 9:
     while(T==0){
-    line_trace(FRONT);
+    line_trace();
     }
     countL_old=countL;
     while(abs(countL-countL_old)<200){
@@ -135,7 +146,7 @@ line_sensor();
     }
     countR_old=countR;
     while(countR-countR_old<7000){//要調整
-      line_trace(FRONT);
+      line_trace();
     }
     servo(HIGH);
     delay(5000);
@@ -145,10 +156,10 @@ line_sensor();
   break;
   
   default:
-    line_trace(FRONT);
+    line_trace();
     break;
   }
-  */
+  
 
 /*    
   driveDistance(200,200,FRONT,FRONT);
