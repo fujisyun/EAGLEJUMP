@@ -136,8 +136,6 @@ void line_trace(){
   line_sensor();
   volatile unsigned long countL_old;
   volatile unsigned long countR_old;
-      Serial.print(situation);
-      Serial.print("\t");
 
   int drivepower=150;
   T=false;
@@ -154,18 +152,14 @@ void line_trace(){
       countL_old=countL;
       countR_old=countR;
       while((countL-countL_old)<100&&(countR-countR_old)<100){
-          Serial.print("xxxxxxxxxxxxxxxxxxxx");
-          Serial.print("\t");          
-        drive(drivepower,drivepower,FRONT,FRONT);
-  LSD5=!(PINC & _BV(5)&&32);
+        drive(100,100,FRONT,FRONT);
+        LSD5=!(PINC & _BV(5)&&32);
           if(LSD5){//右が反応したら
 
           T=true;
           situation++;
-//          driveDistance(500,500,FRONT,FRONT);
-          drive(0,0,FRONT,FRONT);
-          delay(5000);
-//         break;
+          driveDistance(0,0,FRONT,FRONT);
+         break;
         }
       }
 //T字を見つけたらループを抜ける
@@ -175,9 +169,6 @@ void line_trace(){
       countR_old=countR;
       while(abs(countR-countR_old)<100){
         LSD1=PINC & _BV(1)&&2;
-        Serial.print(countR-countR_old);
-        Serial.print("\t");
-        Serial.println("aaaaaaaaaaaaaa");
         drive(0,drivepower,FRONT,FRONT);
       }
       drive(0,0,FRONT,FRONT);
@@ -210,16 +201,13 @@ void line_trace(){
       countR_old=countR;
         //ある程度前進
       while((countL-countL_old)<100&&(countR-countR_old)<100){
-   LSD1=!(PINC & _BV(1)&&2);
-          drive(drivepower,drivepower,FRONT,FRONT);
-          Serial.print(LSD1);
-          Serial.print("\t");          
+          LSD1=!(PINC & _BV(1)&&2);
+          drive(100,100,FRONT,FRONT);
         if(LSD1){
           T=true;
           situation++;
           drive(0,0,FRONT,FRONT);
-          delay(5000);
-//          break;
+          break;
         }
       }
       if(T==true)break;
@@ -230,9 +218,6 @@ void line_trace(){
         //現在の値からロータリーエンコーダが200カウントするまで
       while(abs(countL-countL_old)<200){
         LSD1=PINC & _BV(5)&&2;
-        Serial.print(countL);
-        Serial.print("\t");
-        Serial.println("aaaaaaaaaaaaaa");
         drive(drivepower,0,FRONT,FRONT);
       }
       drive(0,0,FRONT,FRONT);
