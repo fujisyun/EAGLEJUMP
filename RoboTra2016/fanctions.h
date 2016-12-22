@@ -88,51 +88,51 @@ void quadturn(boolean muki){
   }
 }
 
-void forest(){//迷いの森(値など要修正）
-  float Ad,Bd;
-  boolean A=0,B=0;
-  static boolean turn=left;
-  int mode,countR_old,countL_old;
-  Ad = getDistance(trigPinA,echoPinA);//右
-  Bd = getDistance(trigPinB,echoPinB);//左
-
-  //三項演算子で書いてしまいました。可読性が下がる…
-  //距離が3以下になったら障害物検知
-  A=(Ad>3)?1:0;//A>3なら1、そうでないなら0を返す
-  B=(Bd>3)?1:0;
-  mode=A+B*2;
-
-
-//  Serial.println(mode);
-
-  switch(mode){//両方検知しない
-  case 0://両方検知しない
-    //  while()
-    drive(50,50,FRONT,FRONT);
-    break;
-
-  case 1://右側検知
-    quadturn(left);
-    break;
-
-  case 2://左側検知
-    quadturn(right);
-    break;
-
-  case 3://両側検知
-    if((Ad-Bd)<0){
-      quadturn(left);
-    }
-    else{
-      quadturn(right);
-    }
-
-    break;
-
-  default://(お守り)
-    break;
-  }
-}
+//void forest(){//迷いの森(値など要修正）
+//  float Ad,Bd;
+//  boolean A=0,B=0;
+//  static boolean turn=left;
+//  int mode,countR_old,countL_old;
+//  Ad = getDistance(trigPinA,echoPinA);//右
+//  Bd = getDistance(trigPinB,echoPinB);//左
+//
+//  //三項演算子で書いてしまいました。可読性が下がる…
+//  //距離が3以下になったら障害物検知
+//  A=(Ad>3)?1:0;//A>3なら1、そうでないなら0を返す
+//  B=(Bd>3)?1:0;
+//  mode=A+B*2;
+//
+//
+////  Serial.println(mode);
+//
+//  switch(mode){//両方検知しない
+//  case 0://両方検知しない
+//    //  while()
+//    drive(50,50,FRONT,FRONT);
+//    break;
+//
+//  case 1://右側検知
+//    quadturn(left);
+//    break;
+//
+//  case 2://左側検知
+//    quadturn(right);
+//    break;
+//
+//  case 3://両側検知
+//    if((Ad-Bd)<0){
+//      quadturn(left);
+//    }
+//    else{
+//      quadturn(right);
+//    }
+//
+//    break;
+//
+//  default://(お守り)
+//    break;
+//  }
+//}
 
 
 
