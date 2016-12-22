@@ -113,7 +113,7 @@ void avoid(){//Lが左、Rが右の超音波センサー。
     case 1://右を見る
       Serial.println("Practice case 1. Turn Right.");
       while(Ld!=0&&Rd!=0){
-        drive(0,200,FRONT,BACK);
+        drive(0,100,FRONT,BACK);
         Serial.println("R");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
@@ -123,7 +123,7 @@ void avoid(){//Lが左、Rが右の超音波センサー。
     case 2://左を見る
       Serial.println("Practice case 2. Turn Left.");
       while(Ld!=0&&Rd!=0){
-        drive(0,200,BACK,FRONT);
+        drive(0,100,BACK,FRONT);
         Serial.println("L");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
@@ -151,7 +151,7 @@ void avoid(){//Lが左、Rが右の超音波センサー。
     case 1://右を見る
       Serial.println("Practice case 1. Turn Right.");
       while(angle!=0){
-        drive(0,1000,FRONT,BACK);
+        drive(0,100,FRONT,BACK);
         Serial.println("R");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
@@ -162,7 +162,7 @@ void avoid(){//Lが左、Rが右の超音波センサー。
     case 2://左を見る
       Serial.println("Practice case 2. Turn Left.");
       while(angle!=0){
-        drive(0,1000,BACK,FRONT);
+        drive(0,100,BACK,FRONT);
         Serial.println("L");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);

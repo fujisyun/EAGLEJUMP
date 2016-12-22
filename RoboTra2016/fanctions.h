@@ -200,7 +200,7 @@ void line_trace(){
       countL_old=countL;
       countR_old=countR;
         //ある程度前進
-      while((countL-countL_old)<100&&(countdR-countR_old)<100){
+      while((countL-countL_old)<100&&(countR-countR_old)<100){
           LSD1=!(PINC & _BV(1)&&2);
           drive(100,100,FRONT,FRONT);
         if(LSD1){
