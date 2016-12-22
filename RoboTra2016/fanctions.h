@@ -32,25 +32,6 @@ void speedmeter(){//速度velocityを出している。単位は知らん
   oldR=countR;
 }
 
-
-float getDistance(int trigPin,int echoPin){//超音波センサー
-  long echoLen;
-  float distance;
-
-  //トリガにマイクロ秒のhighパルスを出力
-  digitalWrite(trigPin,LOW);    
-  delayMicroseconds(2);
-  digitalWrite(trigPin,HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin,LOW);
-
-  //エコー信号の長さをマイクロ秒単位で測る
-  echoLen = pulseIn(echoPin,HIGH,2000);//ここの数字で最短距離を調整可能。
-  distance = (float)echoLen*0.017;
-  delay(10);//他の超音波センサと干渉しないように少し待つ
-  return distance;
-}
-
 //一定角度旋回するための関数（回転方向）
 void quadturn(boolean muki){
   int drivepower=50;//強さ
