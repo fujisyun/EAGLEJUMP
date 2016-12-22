@@ -42,6 +42,8 @@ void loop(){
 
 while(1){
       avoid();//障害物避け
+      line_sensor();
+      if(LSmode!=0)break;
 }
 //    drive(200,200,FRONT,FRONT);
 /*
