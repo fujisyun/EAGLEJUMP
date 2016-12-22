@@ -1,4 +1,3 @@
-//DIPスイッチからMODEを読み取る関数。
 int DIPswitch(){
   boolean pinnum_1,pinnum_2,pinnum_4;
   int position;

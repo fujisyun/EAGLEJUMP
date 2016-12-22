@@ -1,16 +1,19 @@
+#include <arduino.h>
 #include <Servo.h>
 #include <MsTimer2.h>
 #include <TimerOne.h>
 #include "fanctions.h"
-#include "switch.h"
+//#include "switch.h"
 
 
 
 void setup(){
-  pinMode(trigPinA,OUTPUT);
-  pinMode(echoPinA,INPUT);
-  pinMode(trigPinB,OUTPUT);
-  pinMode(echoPinB,INPUT);
+//超音波センサー用
+  pinMode(trigPinL,OUTPUT);
+  pinMode(echoPinL,INPUT);
+  pinMode(trigPinR,OUTPUT);
+  pinMode(echoPinR,INPUT);
+
   pinMode(LineSensorDig1,INPUT);
   pinMode(LineSensorDig3,INPUT);
   pinMode(LineSensorDig5,INPUT);
@@ -29,27 +32,15 @@ void setup(){
   //  Timer1.attachInterrupt(flash);
  //以下二つはピン変化割り込み。
  //ピンの状態がHIGH->LOWあるいはLOW->HIGHになったときに指定された関数を実行する。  
-  attachInterrupt(0,flashL,RISING);//pin2
-  attachInterrupt(1,flashR,RISING);//pin3
+  attachInterrupt(0,flashR,RISING);//pin2
+  attachInterrupt(1,flashL,RISING);//pin3
   Serial.begin(9600);
-
 }
 
-
-
 void loop(){
-  
-    line_sensor();
-
-//    drive(100,100,FRONT,FRONT);
-
-    driveDistance(2000,2000,FRONT,FRONT);
-    delay(1000);
-    driveDistance(2000,2000,BACK,BACK);
-    delay(1000);
-
-
-/*  Serial.print(LSD1);
+/*
+  line_sensor();	
+  Serial.print(LSD1);
   Serial.print("\t");
   Serial.print(LSA2);
   Serial.print("\t");
@@ -59,36 +50,31 @@ void loop(){
   Serial.print("\t");
   Serial.print(LSD5);
   Serial.print("\t");
-  Serial.print("\t");*/
+  Serial.println("\t");
+*/
 
-
-
-//  sendSerial();
-
-
-    /*
+    
   switch(situation){//何回目のT字か
   //1,3,5,7,9でそれぞれ1,2,3,4,5回目
   //読みずらいので要修正かと
   case 1://1回目
-    driveDistance(1000,1000,BACK,FRONT);
-    while(LSD3){
-      LSD3=PINC & _BV(3)&&8;
-      drive(50,50,BACK,FRONT);
-    }
-    while(T==0){//T字を検知するまで
-    line_trace(BACK);
-    }
-    situation++;
+	Serial.print("TTTTTTTT");
+	driveDistance(1000,1000,FRONT,FRONT);
+	while(1){
+      avoid();//障害物避け
+      line_sensor();
+      if(LSmode!=0)break;
+	}
+	situation++;
     break;
-
+/*
   case 3://2回目
       driveDistance(1000,1000,BACK,BACK);
       delay(5000);
       driveDistance(1200,1200,FRONT,FRONT);
       situation++;
     break;
-
+/*
   case 5://3
     drive(0,0,BACK,BACK);
 
@@ -109,13 +95,13 @@ void loop(){
 
   case 7://4回目
     driveDistance(100,100,FRONT,FRONT);
-    forest();//障害物除け
+    avoid();//障害物除け
     situation++;
     break;
 
   case 9:
     while(T==0){
-    line_trace(FRONT);
+    line_trace();
     }
     countL_old=countL;
     while(abs(countL-countL_old)<200){
@@ -131,7 +117,7 @@ void loop(){
     }
     countR_old=countR;
     while(countR-countR_old<7000){//要調整
-      line_trace(FRONT);
+      line_trace();
     }
     servo(HIGH);
     delay(5000);
@@ -139,12 +125,12 @@ void loop(){
     
     situation++;  
   break;
-  
+  */
   default:
-    line_trace(FRONT);
+    line_trace();
     break;
   }
-  */
+  
 
 /*    
   driveDistance(200,200,FRONT,FRONT);
@@ -153,9 +139,5 @@ void loop(){
   */
 }
 
-
-
-void   sendSerial(){
-}
 
 

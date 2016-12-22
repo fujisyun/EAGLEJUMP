@@ -1,7 +1,8 @@
 #include "variables.h"
 
 //モーターをPID制御で動かす関数…引数（左の目標値、右の目標値、左の向き、右の向き)
-void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
+void drive(int vel_goalL,int vel_goalR,bool directionL,bool directionR){
+
   dvelL[prepre]=dvelL[pre];
   dvelR[prepre]=dvelR[pre];
   dvelL[pre]=dvelL[now];
@@ -18,9 +19,19 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
 
   dMVL=pValueL+iValueL+dValueL;
   dMVR=pValueR+iValueR+dValueR;
+  MVR=0;
+  MVL=0;
   MVR=MVR+dMVR;
   MVL=MVL+dMVL;
 
+/*
+  Serial.print("driving");
+  Serial.print("\t");
+  Serial.print(MVL);
+  Serial.print("\t");
+  Serial.print(MVR);
+  Serial.print("\t");
+*/
   MVL = constrain(MVL,0,255);//関数内は値の調整(ArduinoではPWMは0~255だから)
   MVR = constrain(MVR,0,255);//関数内は値の調整
 
@@ -83,14 +94,9 @@ void drive(int vel_goalL,int vel_goalR,boolean directionL,boolean directionR){
   }
 
 
-
-  Serial.print(MVL);
-  Serial.print("\t");
-  Serial.print(MVR);
-  Serial.print("\t");
 }
 
-void servo(boolean state){//サーボ用マイコンに信号を送るための関数
+void servo(bool state){//サーボ用マイコンに信号を送るための関数
   if(state==HIGH)digitalWrite(servopin,HIGH);
   if(state==LOW)digitalWrite(servopin,LOW);
 }
@@ -98,41 +104,28 @@ void servo(boolean state){//サーボ用マイコンに信号を送るための�
 
 //一定距離進む関数(左目標値、右目標値、左進行方向、右進行方向）割としっかり進む。
 //本番は500mmで2500くらい<-要調整
-void driveDistance(int L,int R,boolean directionL,boolean directionR){
+void driveDistance(int L,int R,bool directionL,bool directionR){
   int drivepower=150;
   volatile unsigned long countR_old=countR;
   volatile unsigned long countL_old=countL;
   boolean Rval=0,Lval=0,ans=1;
   while(ans){
 
-    Serial.print(countL-countL_old);
-    Serial.print("\t");
-    Serial.print(countR-countR_old);
-    Serial.print("\t");
-    
-
     if(countR-countR_old<R&&countL-countL_old<L){
         drive(drivepower,drivepower,directionR,directionL);
-Serial.println("aaaa\n");
       }
     else if(countR-countR_old>=R&&countL-countL_old<L){
         drive(drivepower,0,directionR,directionL);
-Serial.println("cccc\n");
       }
     else if(countR-countR_old<R&&countL-countL_old>=L){
         drive(0,drivepower,directionR,directionL);
-Serial.println("bbbb\n");
       }
     else if(countR-countR_old>=R&&countL-countL_old>=L){//指定距離進んだら止まる
         drive(0,0,directionR,directionL);
-Serial.println("dddd\n");
         ans=0;
       }
     
-/*      Serial.print(countL);
-  Serial.print("\t");
-  Serial.println(countR);
-*/
+
   }
 
 }
