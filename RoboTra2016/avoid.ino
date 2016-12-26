@@ -13,8 +13,9 @@ void avoid(){//Lが左、Rが右の超音波センサー。
   static int var = 1;
   static int angle = 0;
   static int timeout = 0;
-  const int timeoutborder = 10;//timeoutがtimeourborderを超えたら、マシンの向きを正面に戻す。
+  const int timeoutborder = 20;//timeoutがtimeourborderを超えたら、マシンの向きを正面に戻す。
   
+
   Ld = getDistance(trigPinL,echoPinL);
   Rd = getDistance(trigPinR,echoPinR);
   Serial.print(Ld);
@@ -24,6 +25,7 @@ void avoid(){//Lが左、Rが右の超音波センサー。
   Serial.print(angle);
   Serial.print(",timeout=");
   Serial.println(timeout);
+  delay(100);
 
 
 
@@ -111,23 +113,30 @@ void avoid(){//Lが左、Rが右の超音波センサー。
     }
     switch(var){
     case 1://右を見る
-      Serial.println("Practice case 1. Turn Right.");
-      while(Ld!=0&&Rd!=0){
-        drive(0,100,FRONT,BACK);
+      Serial.println("case 1. Turn Right.");
+      while(Ld!=0||Rd!=0){
+        drive(0,150,FRONT,BACK);
         Serial.println("R");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
         angle--;
+    Serial.print("normal case1 angle=");
+    Serial.println(angle);
+    delay(10);
+
       }
       break;
     case 2://左を見る
-      Serial.println("Practice case 2. Turn Left.");
-      while(Ld!=0&&Rd!=0){
-        drive(0,100,BACK,FRONT);
+      Serial.println("case 2. Turn Left.");
+      while(Ld!=0||Rd!=0){
+        drive(0,150,BACK,FRONT);
         Serial.println("L");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
         angle++;
+    Serial.print("normal case2 angle=");
+    Serial.println(angle);
+    delay(10);
       }
       break; 
     }//switchのかっこ
@@ -139,38 +148,49 @@ void avoid(){//Lが左、Rが右の超音波センサー。
 //    drive(0,0,FRONT,FRONT);
     Serial.println("timeout reset");
     delay(200);
-    
+    timeout = 0;    
     if(angle==0){
       var = 3;
     }else if(angle<0){
       var = 2;
-    }else{
+    }else if(angle>0){
       var = 1;
     }
     switch(var){
     case 1://右を見る
       Serial.println("Practice case 1. Turn Right.");
-      while(angle!=0){
-        drive(0,100,FRONT,BACK);
+      while(angle>0){
+        drive(0,150,FRONT,BACK);
         Serial.println("R");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
         angle--;
+    Serial.print("angle reset case1 angle=");
+    Serial.println(angle);
         delay(10);
       }
+      Serial.println("Practice case 1. break");
       break;
     case 2://左を見る
       Serial.println("Practice case 2. Turn Left.");
-      while(angle!=0){
-        drive(0,100,BACK,FRONT);
+      while(angle<0){
+        drive(0,150,BACK,FRONT);
         Serial.println("L");
         Rd = getDistance(trigPinR,echoPinR);
         Ld = getDistance(trigPinL,echoPinL);
         angle++;
+    Serial.print("angle reset case2 angle=");
+    Serial.println(angle);
         delay(10);
       }
+      Serial.println("Practice case 2. break");
       break; 
     case 3://何もしない。
+    Serial.println("nothing");
+        Rd = getDistance(trigPinR,echoPinR);
+        Ld = getDistance(trigPinL,echoPinL);
+      Serial.println("Practice case 3. break");
+    delay(10);
       break; 
     }
   }//switchのかっこ

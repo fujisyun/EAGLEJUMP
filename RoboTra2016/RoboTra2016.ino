@@ -38,8 +38,13 @@ void setup(){
 }
 
 void loop(){
-/*
+
+Serial.print(countR);
+  Serial.print("\t");
+Serial.println(countL);
+  Serial.print("\t");
   line_sensor();	
+/*
   Serial.print(LSD1);
   Serial.print("\t");
   Serial.print(LSA2);
@@ -51,15 +56,19 @@ void loop(){
   Serial.print(LSD5);
   Serial.print("\t");
   Serial.println("\t");
-*/
 
-    
+
+    */
   switch(situation){//何回目のT字か
   //1,3,5,7,9でそれぞれ1,2,3,4,5回目
   //読みずらいので要修正かと
   case 1://1回目
 	Serial.print("TTTTTTTT");
+	drive(0,0,FRONT,FRONT);
+	delay(1000);
 	driveDistance(1000,1000,FRONT,FRONT);
+	drive(0,0,FRONT,FRONT);
+	delay(1000);
 	while(1){
       avoid();//障害物避け
       line_sensor();

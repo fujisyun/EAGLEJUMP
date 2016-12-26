@@ -105,7 +105,7 @@ void servo(bool state){//サーボ用マイコンに信号を送るための関�
 //一定距離進む関数(左目標値、右目標値、左進行方向、右進行方向）割としっかり進む。
 //本番は500mmで2500くらい<-要調整
 void driveDistance(int L,int R,bool directionL,bool directionR){
-  int drivepower=150;
+  int drivepower=200;
   volatile unsigned long countR_old=countR;
   volatile unsigned long countL_old=countL;
   boolean Rval=0,Lval=0,ans=1;

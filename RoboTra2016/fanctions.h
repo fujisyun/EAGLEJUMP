@@ -137,7 +137,7 @@ void line_trace(){
   volatile unsigned long countL_old;
   volatile unsigned long countR_old;
 
-  int drivepower=150;
+  int drivepower=200;
   T=false;
     switch(LSmode){
     case 1://左のみ
@@ -148,11 +148,13 @@ void line_trace(){
 
     case 5://中心と左
       drive(0,0,BACK,BACK);
-      //    delay(1000);
+          delay(10);
+        //    delay(1000);
       countL_old=countL;
       countR_old=countR;
-      while((countL-countL_old)<100&&(countR-countR_old)<100){
-        drive(100,100,FRONT,FRONT);
+      while((countL-countL_old)<300&&(countR-countR_old)<300){
+        Serial.print("aaaaaaaaaaaaaaaaaaaaa");
+        drive(drivepower,drivepower,FRONT,FRONT);
         LSD5=!(PINC & _BV(5)&&32);
           if(LSD5){//右が反応したら
 
@@ -162,28 +164,27 @@ void line_trace(){
          break;
         }
       }
+
 //T字を見つけたらループを抜ける
         if(T==true)break;
 
       T=false;
+      drive(0,0,BACK,BACK);
       countR_old=countR;
-      while(abs(countR-countR_old)<100){
-        LSD1=PINC & _BV(1)&&2;
+      while(abs(countR-countR_old)<200){
+        LSD5=PINC & _BV(5)&&32;
         drive(0,drivepower,FRONT,FRONT);
       }
-      drive(0,0,FRONT,FRONT);
-
       while(LSD3){
-        Serial.println("ccccccccccccc");
         LSD3=PINC & _BV(3)&&8;
         drive(0,drivepower,FRONT,FRONT);
       }
+      drive(0,0,FRONT,FRONT);
       break;
-      
 
 
     case 4://中心のみ
-      drive((LSA4>>2)+drivepower,(LSA2>>2)+drivepower,FRONT,FRONT);
+      drive((LSA4>>3)+drivepower,(LSA2>>3)+drivepower,FRONT,FRONT);
       Serial.print("case 4");
       Serial.print("\t");
       break;
@@ -197,12 +198,14 @@ void line_trace(){
 
 
     case 20://真ん中と右
+          drive(0,0,BACK,BACK);
+          delay(10);
       countL_old=countL;
       countR_old=countR;
         //ある程度前進
-      while((countL-countL_old)<100&&(countR-countR_old)<100){
+      while((countL-countL_old)<300&&(countR-countR_old)<300){
           LSD1=!(PINC & _BV(1)&&2);
-          drive(100,100,FRONT,FRONT);
+          drive(drivepower,drivepower,FRONT,FRONT);
         if(LSD1){
           T=true;
           situation++;
@@ -217,6 +220,7 @@ void line_trace(){
       countL_old=countL;
         //現在の値からロータリーエンコーダが200カウントするまで
       while(abs(countL-countL_old)<200){
+        Serial.println("ccccccccccccc");
         LSD1=PINC & _BV(5)&&2;
         drive(drivepower,0,FRONT,FRONT);
       }
@@ -231,7 +235,7 @@ void line_trace(){
       
 
     case 21:
-      drive(0,0,FRONT,FRONT);
+      drive(100,100,FRONT,FRONT);
       Serial.print("case 21");
       Serial.print("\t");
       break;
