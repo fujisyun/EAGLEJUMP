@@ -13,7 +13,7 @@ PCA9685 pwm = PCA9685(0x40);    //PCA9685のアドレス指定（AE-PCA9685一�
 #define SERVOMAX 600            //最大パルス幅 (標準的なサーボパルスに設定)
 #define Servo1 90            //サーボ右1の中心角度
 #define Servo2 126            //サーボ左2の中心角度(なんかずれてるor270サーボの可能性)
-#define ServoDelay 10            //現在角度からターゲット角度へ移行する間にかけるディレイ時間
+#define ServoDelay 6            //現在角度からターゲット角度へ移行する間にかけるディレイ時間
 
 int n1 = 0; //サーボ1動かす時の繰り返し用変数
 int n2 = 0; //サーボ2動かす時の繰り返し用変数
@@ -41,7 +41,7 @@ void servo_write(int ch, int ang){ //動かすサーボチャンネルと角度�
 }
 
 //モーション
-void Ikaservo(){
+void IkaservoOP(){
    //サーボ用プログラム、n1 or n2にターゲット角度   
    //１°ずつ動かさないと電池だと電流不足でカクつきます.最終的にここに落ち着いた
    //最初などターゲット角度と現在角度との間に大きく差がある時はどうしてもカクつきます
@@ -57,6 +57,9 @@ void Ikaservo(){
          //Serial.println(n1);
          //Serial.println(n2);
       }
+}
+//モーション
+void IkaservoCL(){
     //足を閉じるとき
       for(int i=0 ; i<30 ; i++){
         n1 = n1 + 1;
@@ -71,9 +74,10 @@ void Ikaservo(){
 }
 
 void loop(){
+//      Serial.println("servo start");
     //サーボモーション
-      Ikaservo();//足のモーション関数実行
-    
+      IkaservoOP();//足のモーション関数実行
+//      Serial.println("servo end");
     //ライントレース
       int c = 750;//閾値。黒いと値が大きくなる。
       float L1 = analogRead(A0);//左センサ
@@ -82,15 +86,16 @@ void loop(){
       Serial.print(":");
       Serial.println(L2);
       if(L1>=c){//左センサが黒を検知したとき、
-            Drive(-200,0);
-            delay(50);
-      }else if(L2>=c){//左センサが黒を検知したとき、
-            Drive(0,-180);
-            delay(50);
+            Drive(-120,0);
+            delay(20);
+      }else if(L2>=c){//右センサが黒を検知したとき、
+            Drive(0,-150);
+            delay(20);
       }else{//センサが黒を検知していないとき
             Drive(200,180); 
-            delay(50);
+            delay(20);
       }
+      IkaservoCL();
       delay(10);
       
 }
