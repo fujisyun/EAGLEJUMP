@@ -1,0 +1,56 @@
+# import the necessary packages
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import time
+import cv2
+import numpy as <br>#camera resolution
+RESOLUTION_X = 640/2
+RESOLUTION_Y = 480/2
+ 
+cv2.namedWindow("Frame")
+ 
+hsv = np.zeros((RESOLUTION_X,RESOLUTION_Y))
+<br>#mouse event functoion
+def mouse_event(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        global hsv
+        print(hsv[y][x])
+ 
+#set mous event<br>cv2.setMouseCallback("Frame", mouse_event)
+ 
+camera = PiCamera()
+camera.resolution = (RESOLUTION_X, RESOLUTION_Y)
+camera.framerate = 32
+rawCapture = PiRGBArray(camera, size=(RESOLUTION_X, RESOLUTION_Y))
+  
+# allow the camera to warmup
+time.sleep(0.1)
+ 
+# capture frames from the camera
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    image = frame.array
+    #mask
+    lower_yellow = np.array([20, 50, 50])
+    upper_yellow = np.array([100, 255, 255])
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    img_dst = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    #horizon analysis
+    horizon = np.zeros(RESOLUTION_X)
+    for k in range(0,RESOLUTION_Y):
+        horizon += img_dst[k]
+    amax = np.argmax(horizon)
+    print(amax)
+    #convert grau->rgb
+    ans_image = cv2.cvtColor(img_dst, cv2.COLOR_GRAY2RGB)
+    #calc hist
+    hist = cv2.calcHist([img_dst],[0],None,[256],[0,256])
+    if hist[255] > 1000 :
+        cv2.circle(ans_image, (amax,  RESOLUTION_Y), 10, (0, 0, 255), -1)
+ 
+    cv2.imshow("Frame", ans_image)
+    key = cv2.waitKey(1) & 0xFF
+  
+    rawCapture.truncate(0)
+  
+    if key == ord("q"):
+        break
