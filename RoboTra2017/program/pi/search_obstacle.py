@@ -9,7 +9,7 @@ RESOLUTION_X = 640/2
 RESOLUTION_Y = 480/2
  
 cv2.namedWindow("Frame1")
-cv2.namedWindow("Frame2")
+#cv2.namedWindow("Frame2")
 cv2.namedWindow("Frame3")
  
 hsv = np.zeros((RESOLUTION_X,RESOLUTION_Y))
@@ -33,10 +33,10 @@ time.sleep(0.1)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
     #mask
-    lower_yellow = np.array([150, 150, 150])
-    upper_yellow = np.array([255, 255, 255])
+    lower_white = np.array([150, 150, 150])
+    upper_white = np.array([255, 255, 255])
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    img_dst = cv2.inRange(image, lower_yellow, upper_yellow)
+    img_dst = cv2.inRange(image, lower_white, upper_white)
     #horizon analysis
     horizon = np.zeros(RESOLUTION_X)
     for k in range(0,RESOLUTION_Y):
@@ -51,7 +51,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         cv2.circle(ans_image, (amax,  RESOLUTION_Y), 10, (0, 0, 255), -1)
  
     cv2.imshow("Frame1", ans_image)
-    cv2.imshow("Frame2", img_dst)
+#    cv2.imshow("Frame2", img_dst)
     cv2.imshow("Frame3", image)
     key = cv2.waitKey(1) & 0xFF
   

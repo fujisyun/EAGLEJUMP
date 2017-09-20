@@ -9,7 +9,7 @@ import numpy as np
 RESOLUTION_X = 640/8
 RESOLUTION_Y = 480/8
 
-threshold=120
+threshold=50
 max_value=255
 BLACK=0
 WHITE=max_value
@@ -43,9 +43,13 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 # グレースケールを二値化
     ret, dst = cv2.threshold(gray,threshold,max_value,cv2.THRESH_BINARY)
 
-#   配列の定義    
+#       
     middle=[]
     yyy=[]
+    black_row=0
+    half_black_row=0
+    line_status='none'
+    Right_angle_direction=-1
 #   上から順に
     for pixel_y in range(RESOLUTION_Y-1):
 	count=0
@@ -70,10 +74,30 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		prev_color=BLACK
 #	各座標データとラインの中心の座標を配列にいれる
 	yyy.append(pixel_y)
-	middle.append(middle,(right_of_line-left_of_line)/2)
-
 	line_width=right_of_line-left_of_line
-        print 'pixel_y ='+str(pixel_y)+'	left ='+str(left_of_line)+'	right ='+str(right_of_line)+'	count='+str(line_width)
+	middle.append(line_width/2)
+#	一行あたりのラインの黒具合？
+	if line_width > RESOLUTION_X/2:
+	    if line_width > RESOLUTION_X-5:
+    		black_row=black_row+1
+	    else:
+    		half_black_row=half_black_row+1
+		Right_angle_direction=left_of_line+line_width/2
+# 一行すべて黒の行が3つ以上ある場合
+    if black_row > 2:
+    	line_status='TTTTTTTT'
+    elif half_black_row > 2:
+# 直角が右か左か
+	if Right_angle_direction > RESOLUTION_X/2:
+    	    line_status='Right_angle_right'
+	else:
+	    line_status='Right_angle_left'
+    else:
+	line_status='straight'
+
+#    print 'line status ='+ line_status
+#+'		'+str(Right_angle_direction)
+#        print 'pixel_y ='+str(pixel_y)+'	left ='+str(left_of_line)+'	right ='+str(right_of_line)+'	count='+str(line_width)
 #        print 'pixel_y ='+str(pixel_y)+'	count ='+str(count)
 
 
@@ -88,8 +112,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     cv2.imshow("Frame2", gray)
     key = cv2.waitKey(1) & 0xFF
 
-    pixelValue = dst[2, 78]
-    print 'value = ' + str(pixelValue)
+#    pixelValue = dst[2, 78]
+    print 'y = ' + str(slope)+'x '+ str(segment)
 
     rawCapture.truncate(0)
   
