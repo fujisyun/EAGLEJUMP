@@ -8,10 +8,25 @@
 #include <math.h>
 #include <PCA9685.h> //PCA9685用ヘッダーファイル（秋月電子通商作成）
 PCA9685 pwm = PCA9685(0x40);    //PCA9685のアドレス指定（AE-PCA9685一枚なのでこれでOK)
-
+char dat[10];
+int count=0;
+int cmd=0;
+String cmd_dat="none";  
 #define SERVOMIN 150            //最小パルス幅 (SG92Rサーボパルスにあわせて設定)
 #define SERVOMAX 600            //最大パルス幅 (SG92Rサーボパルスに設定)
 #define ServoDelay 10            //現在角度からターゲット角度へ移行する間にかけるディレイ時間
+#define LED_LEFT_PIN 8          //左目
+#define LED_RIGHT_PIN 9         //右目
+
+#define ADVANCE 1111
+#define RIGHT 2222
+#define LEFT 3333
+#define STOP 4444
+#define BACK 5555
+#define LED_ON 6666
+#define LED_OFF 7777
+#define FORWARD 8888
+#define NONE 9999
 
 void setup(){
   //サーボ用セットアップ ※A4ピンをSDA,A5ピンをSCLに使います
@@ -20,25 +35,35 @@ void setup(){
   Serial.begin(9600);
 }
 
-int StringToInt(String str){
-  if(str.compareTo("advance")==0){
-    return 'a';
+int change_cmd(String str){
+  // 文字列を比較する．　　何故だか不明だが，このプログラムだとシリアルで受け取った文字配列を文字列に変換するときに
+  // 末尾に表示されない文字が追加される（多分 \0 ）．だけど"*******\0"みたいな文字列と比較してもうまくいかなかった．
+  // そのため文字列の先頭を比較することにした．
+  if(str.startsWith("advance")){
+    return ADVANCE;
   }
-  else if(str.compareTo("right")==0){
-    return 'r';
+  else if(str.startsWith("right")){
+    return RIGHT;
   }
-  else if(str.compareTo("forward")==0){
-    return 'f';
+  else if(str.startsWith("forward")){
+    return FORWARD;
   }
-  else if(str.compareTo("left")==0){
-    return 'l';
+  else if(str.startsWith("left")){
+    return LEFT;
   }
-  else if(str.compareTo("back")==0){
-    return 'b';
+  else if(str.startsWith("back")){
+    return BACK;
   }
-  else if(str.compareTo("stop")==0){
-    return 's';
+  else if(str.startsWith("stop")){
+    return STOP;
   }
+  else if(str.startsWith("led on")){
+    return LED_ON;
+  }
+  else if(str.startsWith("led off")){
+    return LED_OFF;
+  }
+    return NONE;
 }
 
 void loop(){
@@ -54,13 +79,12 @@ void loop(){
     if (count > 10 || dat[count] == '\n') {  // 文字数が既定の個数を超えた場合、又は終了文字を受信した場合
       dat[count] = '\0';                    // 末尾に終端文字を入れる
       count = 0;                            // 文字カウンタをリセット
-      Serial.print ("Data = ");
-      Serial.println(dat);
+
+      cmd_dat=String(dat);
     } else {
       count++;                              // 文字カウンタに 1 加算
     }
-  }  
-  String  cmd=String(dat);
+  }
 
 //       while(1){
 //      servo_output(135,135,
@@ -199,7 +223,8 @@ void loop(){
       }
       y3 = major * sin(phi3) - y_refer;
 
-//      delay(40);//下のシリアルを使わないときはこのdelayをさせる。Serialの処理分の時間をここで代わりに稼いでる。
+      delay(40);//下のシリアルを使わないときはこのdelayをさせる。Serialの処理分の時間をここで代わりに稼いでる。
+/*
       Serial.print(x0);      
       Serial.print(",");      
       Serial.print(y0);
@@ -213,8 +238,7 @@ void loop(){
       Serial.print(theta0_deg);      
       Serial.print(",theta1:");      
       Serial.println(theta1_deg);
-
-            
+*/            
       //逆運動学の計算。関数化したぜ。
       //http://www1.cts.ne.jp/~clab/hsample/Point/Point18.html
       InKine(x0,y0,&theta0_deg,&theta1_deg);
@@ -226,9 +250,15 @@ void loop(){
 //            Serial.print(",");
 //            Serial.println(theta1_deg);
 
-
-switch(StringToInt(cmd)){//引数は、inputchar
-  case 'a'://advance.前進。
+  // // Serial.print(cmd);
+  // cmd=change_cmd(cmd_dat);
+  // Serial.print("\tcmd=");
+  // // int xxx=StringToInt(cmd);
+  // Serial.print(cmd);
+  // delay(100);
+  // Serial.print("\n");
+switch(change_cmd(cmd_dat)){//引数は、inputchar
+  case ADVANCE://advance.前進。
     direction = 1.;  
       servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
                    theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -236,7 +266,7 @@ switch(StringToInt(cmd)){//引数は、inputchar
                    theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
                    theta8_deg+theta8_cor_deg);
     break;
-  case 'r'://right.右を向く。
+  case RIGHT://right.右を向く。
     theta8_deg =175.;
       servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
                    theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -244,7 +274,7 @@ switch(StringToInt(cmd)){//引数は、inputchar
                    theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
                    theta8_deg+theta8_cor_deg);
     break;
-  case 'f'://forward.前を向く。
+  case FORWARD://forward.前を向く。
     theta8_deg =135.;
       servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
                    theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -252,7 +282,7 @@ switch(StringToInt(cmd)){//引数は、inputchar
                    theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
                    theta8_deg+theta8_cor_deg);
     break;
-  case 'l'://left.左を向く。
+  case LEFT://left.左を向く。
     theta8_deg =95.;
       servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
                    theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -260,7 +290,7 @@ switch(StringToInt(cmd)){//引数は、inputchar
                    theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
                    theta8_deg+theta8_cor_deg);
     break;
-  case 'b'://back.後進。
+  case BACK://back.後進。
     direction = -1.;
       servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
                    theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -268,7 +298,7 @@ switch(StringToInt(cmd)){//引数は、inputchar
                    theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
                    theta8_deg+theta8_cor_deg);
     break;
-    case 's'://stop.待て。
+    case STOP://stop.待て。
 
 //      servo_output(theta0_deg+theta0_cor_deg,theta1_deg+theta1_cor_deg,
 //                   theta2_deg+theta2_cor_deg,theta3_deg+theta3_cor_deg,
@@ -276,8 +306,22 @@ switch(StringToInt(cmd)){//引数は、inputchar
 //                   theta6_deg+theta6_cor_deg,theta7_deg+theta7_cor_deg,
 //                   theta8_deg+theta8_cor_deg);
     break;
-}
+    case LED_ON://LED点灯
+        digitalWrite(LED_RIGHT_PIN, HIGH);
+        digitalWrite(LED_LEFT_PIN, HIGH);
+        // Serial.print("led_on\n");
+    break;
+    case LED_OFF://LED消灯
+        digitalWrite(LED_RIGHT_PIN, LOW);
+        digitalWrite(LED_LEFT_PIN, LOW);
+        // Serial.print("led_off\n");
+    break;
+    default://シリアルが上記以外の時何もしない
+        // Serial.println(cmd);
+    break;
+  }
 //            delay(5);//動き確認用に遅くするためのdelay。実際に動かす際はコメントアウトする。
+
 }
 
 
