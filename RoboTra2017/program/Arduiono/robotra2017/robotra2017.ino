@@ -15,8 +15,8 @@ String cmd_dat = "none";
 #define SERVOMIN 150            //最小パルス幅 (SG92Rサーボパルスにあわせて設定)
 #define SERVOMAX 600            //最大パルス幅 (SG92Rサーボパルスに設定)
 #define ServoDelay 10            //現在角度からターゲット角度へ移行する間にかけるディレイ時間
-#define LED_LEFT_PIN 5          //左目
-#define LED_RIGHT_PIN 6         //右目
+#define LED_LEFT_PIN 8          //左目
+#define LED_RIGHT_PIN 9         //右目
 
 //以下ENUMに変える
 #define ADVANCE 1111
@@ -78,9 +78,6 @@ static double direction = 1.;//進む方向。1なら前、-1なら後ろに進�
 const double major = 0.5;//楕円の長軸。歩幅のストロークになる。y
 const double minor = 0.5;//楕円の短軸。足を前に戻すときの高さに関係。x
 const double resolution = 30.0;//モーションの分解能。20~30くらいがちょうどいい？
-
-int led_left_duty=200;
-int led_right_duty=200;
 
 void servo_write(int ch, int ang) { //動かすサーボチャンネルと角度を指定
   ang = map(ang, 0, 270, SERVOMIN, SERVOMAX); //角度（0～180）をPWMのパルス幅（150～600）に変換
@@ -305,49 +302,15 @@ void loop() {
 #endif
     break;
     case 'o'://LED点灯
-    led_right_duty++;
-    led_left_duty++;
-    if (led_right_duty>250)
-    {
-      led_right_duty=250;
-    }
-    if (led_left_duty>250)
-    {
-      led_left_duty=250;
-    }
-    analogWrite(LED_RIGHT_PIN, led_right_duty);
-    analogWrite(LED_LEFT_PIN, led_left_duty);
+    digitalWrite(LED_RIGHT_PIN, HIGH);
+    digitalWrite(LED_LEFT_PIN, HIGH);
 #ifdef DEBUG
     Serial.println("led_on");
 #endif
     break;
-    case 'm':
-    led_right_duty--;
-    led_left_duty--;
-    if (led_right_duty<125)
-    {
-      led_right_duty=125;
-    }
-    if (led_left_duty<125)
-    {
-      led_left_duty=125;
-    }
-    analogWrite(LED_RIGHT_PIN, led_right_duty);
-    analogWrite(LED_LEFT_PIN, led_left_duty);
-    break;
     case 'd'://LED消灯
-    led_right_duty--;
-    led_left_duty--;
-    if (led_right_duty<125)
-    {
-      led_right_duty=125;
-    }
-    if (led_left_duty>125)
-    {
-      led_left_duty=125;
-    }
-    analogWrite(LED_RIGHT_PIN, 0);
-    analogWrite(LED_LEFT_PIN, 0);
+    digitalWrite(LED_RIGHT_PIN, LOW);
+    digitalWrite(LED_LEFT_PIN, LOW);
 #ifdef DEBUG
     Serial.println("led_off");
 #endif
