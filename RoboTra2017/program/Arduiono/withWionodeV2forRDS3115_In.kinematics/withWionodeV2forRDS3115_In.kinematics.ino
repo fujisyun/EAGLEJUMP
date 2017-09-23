@@ -33,12 +33,16 @@ void setup(){
   pwm.begin();                   //初期設定 (アドレス0x40用)
   pwm.setPWMFreq(60);            //PWM周期を60Hzに設定 (アドレス0x40用)  
   Serial.begin(9600);
+  pinMode(LED_LEFT_PIN, OUTPUT);
+  pinMode(LED_RIGHT_PIN, OUTPUT);
 }
 
 int change_cmd(String str){
   // 文字列を比較する．　　何故だか不明だが，このプログラムだとシリアルで受け取った文字配列を文字列に変換するときに
   // 末尾に表示されない文字が追加される（多分 \0 ）．だけど"*******\0"みたいな文字列と比較してもうまくいかなかった．
   // そのため文字列の先頭を比較することにした．
+  // 追記：文字配列から文字列に変換するために\0があったほうがいい
+  Serial.println(str)
   if(str.startsWith("advance")){
     return ADVANCE;
   }
@@ -76,11 +80,12 @@ void loop(){
         // }
   if (Serial.available()) {
     dat[count] = Serial.read();
-    if (count > 10 || dat[count] == '\n') {  // 文字数が既定の個数を超えた場合、又は終了文字を受信した場合
+    if (count > 10 || dat[count] == '\0') {  // 文字数が既定の個数を超えた場合、又は終了文字を受信した場合
       dat[count] = '\0';                    // 末尾に終端文字を入れる
       count = 0;                            // 文字カウンタをリセット
 
       cmd_dat=String(dat);
+
     } else {
       count++;                              // 文字カウンタに 1 加算
     }
@@ -251,10 +256,10 @@ void loop(){
 //            Serial.println(theta1_deg);
 
   // // Serial.print(cmd);
-  // cmd=change_cmd(cmd_dat);
+  cmd=change_cmd(cmd_dat);
   // Serial.print("\tcmd=");
   // // int xxx=StringToInt(cmd);
-  // Serial.print(cmd);
+  Serial.println(cmd);
   // delay(100);
   // Serial.print("\n");
 switch(change_cmd(cmd_dat)){//引数は、inputchar
@@ -309,12 +314,12 @@ switch(change_cmd(cmd_dat)){//引数は、inputchar
     case LED_ON://LED点灯
         digitalWrite(LED_RIGHT_PIN, HIGH);
         digitalWrite(LED_LEFT_PIN, HIGH);
-        // Serial.print("led_on\n");
+         Serial.println("led_on");
     break;
     case LED_OFF://LED消灯
         digitalWrite(LED_RIGHT_PIN, LOW);
         digitalWrite(LED_LEFT_PIN, LOW);
-        // Serial.print("led_off\n");
+         Serial.println("led_off");
     break;
     default://シリアルが上記以外の時何もしない
         // Serial.println(cmd);
